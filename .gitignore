@@ -1,0 +1,47 @@
+# Игнорировать файлы и директории Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Игнорировать виртуальное окружение
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Игнорировать файлы IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+
+# Игнорировать файлы базы данных
+*.sqlite3
+*.db
+*.sql
+
+# Игнорировать статические файлы (если они генерируются автоматически)
+/static/
+/media/
