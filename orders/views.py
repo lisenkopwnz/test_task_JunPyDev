@@ -1,8 +1,10 @@
-from lib2to3.fixes.fix_input import context
-
 from django.db.models import Prefetch
+from django.http import JsonResponse
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.decorators.http import require_POST
+from django.views.generic import ListView, CreateView, DeleteView
 
 from orders.forms import OrderForm, OrderDishFormSet
 from orders.models import Order, OrderDish, Dish
@@ -40,7 +42,7 @@ class CreateOrder(CreateView):
     model = Order
     form_class = OrderForm
     template_name = 'orders/create_order.html'
-    success_url = reverse_lazy('create_order')
+    success_url = reverse_lazy('orders:order_list')
 
     def get_context_data(self, **kwargs):
         """
@@ -76,7 +78,16 @@ class CreateOrder(CreateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-
+@method_decorator(require_POST, name='dispatch')
+class DeleteOrder(View):
+    def post(self, request, *args, **kwargs):
+        order_id = kwargs.get('pk')
+        try:
+            order = Order.objects.get(id=order_id)
+            order.delete()
+            return JsonResponse({"status": "success", "message": "Order deleted successfully"})
+        except Order.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "Order not found"}, status=404)
 
 
 
