@@ -17,6 +17,15 @@ class OrderListView(ListView):
     template_name = 'orders/order_list.html'
     context_object_name = 'orders'
 
+    def get_filters(self):
+        """
+            Возаращает параметры фильтрации из GET запроса.
+        """
+        return {
+            'table_number': self.request.GET.get('table_number'),
+            'status': self.request.GET.get('status'),
+        }
+
     def get_queryset(self):
         """
             Возвращает queryset заказов с предварительной загрузкой связанных данных.
@@ -28,10 +37,18 @@ class OrderListView(ListView):
             Возвращает:
                 QuerySet: Список заказов с предварительно загруженными данными о блюдах и их количестве.
         """
+        filters = self.get_filters()
+
         orders = Order.objects.prefetch_related(
             Prefetch('order_dishes', queryset=OrderDish.objects.only('quantity', 'price_at_order', 'dish')),
             Prefetch('order_dishes__dish', queryset=Dish.objects.only('name', 'price')),
         ).only('id', 'table_number', 'status')
+
+        if filters['table_number']:
+            orders = orders.filter(table_number=filters['table_number'])
+        if filters['status']:
+            orders = orders.filter(status=filters['status'])
+
         return orders
 
 
