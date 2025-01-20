@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Список заказов</title>
+</head>
+<body>
+    <h1>Список заказов</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Номер стола</th>
+                <th>Блюда</th>
+                <th>Общая стоймость</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{order.table_number }}</td>
+                <td>
+                    <ul>
+                        {% for order_dish in order.order_dishes.all %}
+                        <li>
+                            {{ order_dish.dish.name }}
+                            {{ order_dish.quantity }} шт.
+                            {{ order_dish.price_at_order }} руб. за шт.
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td> {{ order.total_price }} руб.</td>
+                <td> {{ order.get_status_display }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
