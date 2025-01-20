@@ -24,9 +24,9 @@
                     <label for="status" class="form-label">Статус:</label>
                     <select id="status" name="status" class="form-select">
                         <option value="">Все</option>
-                        <option value="В ожидании" {% if request.GET.status == "В ожидании" %}selected{% endif %}>В ожидании</option>
-                        <option value="Готово" {% if request.GET.status == "Готово" %}selected{% endif %}>Готово</option>
-                        <option value="Оплачено" {% if request.GET.status == "Оплачено" %}selected{% endif %}>Оплачено</option>
+                        <option value="pending" {% if request.GET.status == "pending" %}selected{% endif %}>В ожидании</option>
+                        <option value="ready" {% if request.GET.status == "ready" %}selected{% endif %}>Готово</option>
+                        <option value="paid" {% if request.GET.status == "paid" %}selected{% endif %}>Оплачено</option>
                     </select>
                 </div>
                 <div class="col-md-4">
@@ -68,6 +68,28 @@
                         <td>{{ order.total_price }} руб.</td>
                         <td>{{ order.get_status_display }}</td>
                         <td>
+                            <div class="dropdown">
+                                <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton{{ order.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Изменить статус
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ order.id }}">
+                                    {% if order.status != "pending" %}
+                                    <li>
+                                        <a class="dropdown-item change-status" href="#" data-status="pending" data-order-id="{{ order.id }}">В ожидании</a>
+                                    </li>
+                                    {% endif %}
+                                    {% if order.status != "ready" %}
+                                    <li>
+                                        <a class="dropdown-item change-status" href="#" data-status="ready" data-order-id="{{ order.id }}">Готово</a>
+                                    </li>
+                                    {% endif %}
+                                    {% if order.status != "paid" %}
+                                    <li>
+                                        <a class="dropdown-item change-status" href="#" data-status="paid" data-order-id="{{ order.id }}">Оплачено</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
                             <button class="btn btn-danger delete-btn" data-order-id="{{ order.id }}" data-bs-toggle="modal" data-bs-target="#deleteModal">
                                 Удалить
                             </button>
@@ -102,6 +124,17 @@
         </div>
     </div>
 
+    <!-- Уведомления (Toast) -->
+    <div id="toastContainer" aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+        <div id="toastTemplate" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+            <div class="toast-header">
+                <strong class="me-auto">Уведомление</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body"></div>
+        </div>
+    </div>
+
     <!-- Подключение jQuery и Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -132,17 +165,74 @@
                             $('#deleteModal').modal('hide');
                             // Удаляем строку из таблицы
                             $(`#order-${orderIdToDelete}`).remove();
+                            // Показываем уведомление об успешном удалении
+                            showToast('Заказ успешно удалён.', 'success');
                         } else {
                             console.error('Ошибка:', data.message);
-                            alert('Ошибка: ' + data.message);  // Уведомление об ошибке
+                            showToast('Ошибка: ' + data.message, 'danger');
                         }
                     },
                     error: function(error) {
                         console.error('Ошибка:', error.responseText);
-                        alert('Произошла ошибка при удалении заказа. Проверьте консоль для подробностей.');
+                        showToast('Произошла ошибка при удалении заказа.', 'danger');
                     }
                 });
             });
+
+            // Изменение статуса заказа
+            $('.change-status').click(function(e) {
+                e.preventDefault();
+
+                const orderId = $(this).data('order-id');
+                const newStatus = $(this).data('status');
+
+                // Отправка POST-запроса
+                $.ajax({
+                    url: `/order/update-status/${orderId}/`,  // Исправленный URL
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': $('meta[name="csrf-token"]').attr('content'),
+                    },
+                    data: {
+                        status: newStatus,
+                    },
+                    success: function(data) {
+                        if (data.status === 'success') {
+                            // Обновляем текст кнопки
+                            const statusDisplay = {
+                                'pending': 'В ожидании',
+                                'ready': 'Готово',
+                                'paid': 'Оплачено'
+                            };
+                            $(`#dropdownMenuButton${orderId}`).text(statusDisplay[newStatus]);
+                            // Обновляем статус в таблице
+                            $(`#order-${orderId} td:nth-child(5)`).text(statusDisplay[newStatus]);
+                            // Показываем уведомление об успешном изменении статуса
+                            showToast('Статус успешно изменён.', 'success');
+                        } else {
+                            console.error('Ошибка:', data.message);
+                            showToast('Ошибка: ' + data.message, 'danger');
+                        }
+                    },
+                    error: function(error) {
+                        console.error('Ошибка:', error.responseText);
+                        showToast('Произошла ошибка при изменении статуса.', 'danger');
+                    }
+                });
+            });
+
+            // Функция для показа уведомлений (Toast)
+            function showToast(message, type) {
+                const toastTemplate = $('#toastTemplate').clone().removeAttr('id');
+                toastTemplate.find('.toast-body').text(message);
+                toastTemplate.addClass(`bg-${type} text-white`);
+                toastTemplate.appendTo('#toastContainer');
+                const toast = new bootstrap.Toast(toastTemplate[0]);
+                toast.show();
+                toastTemplate.on('hidden.bs.toast', function() {
+                    $(this).remove();
+                });
+            }
         });
     </script>
 </body>

@@ -1,5 +1,6 @@
 from django.db.models import Prefetch
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -105,6 +106,16 @@ class DeleteOrder(View):
             return JsonResponse({"status": "success", "message": "Order deleted successfully"})
         except Order.DoesNotExist:
             return JsonResponse({"status": "error", "message": "Order not found"}, status=404)
+
+class UpdateOrderStatus(View):
+    def post(self, request, order_id):
+        order = get_object_or_404(Order, id=order_id)
+        new_status = request.POST.get('status')
+        if new_status:
+            order.status = new_status
+            order.save()
+            return JsonResponse({'status': 'success', 'message': 'Статус успешно изменен.'})
+        return JsonResponse({'status': 'error', 'message': 'Неверный статус.'}, status=400)
 
 
 
