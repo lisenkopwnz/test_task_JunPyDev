@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Создание заказа</title>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const formContainer = document.querySelector('#form-container');
+        const addButton = document.querySelector('#add-form');
+
+        // Находим скрытое поле с общим количеством форм
+        const totalForms = document.querySelector('#id_order_dishes-TOTAL_FORMS');
+
+        // Если поле не найдено, выводим ошибку
+        if (!totalForms) {
+            console.error('Скрытое поле "id_order_dishes-TOTAL_FORMS" не найдено.');
+            return;
+        }
+
+        let formCount = parseInt(totalForms.value);
+
+        addButton.addEventListener('click', function() {
+            // Находим первую форму
+            const firstForm = formContainer.querySelector('.dish-form');
+
+            // Клонируем первую форму
+            const newForm = firstForm.cloneNode(true);
+
+            // Обновляем имена и ID полей в новой форме
+            newForm.innerHTML = newForm.innerHTML.replace(/order_dishes-\d+/g, `order_dishes-${formCount}`);
+
+            // Добавляем новую форму в контейнер
+            formContainer.appendChild(newForm);
+
+            // Увеличиваем счетчик форм
+            formCount += 1;
+            totalForms.value = formCount;
+        });
+    });
+</script>
+</head>
+<body>
+    <h1>Создание заказа</h1>
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Основная форма заказа -->
+        <div>
+            {{ form.as_p }}
+        </div>
+
+        <!-- Формы для добавления блюд -->
+        <div id="form-container">
+            {{ order_dish_formset.management_form }}
+            {% for form in order_dish_formset %}
+                <div class="dish-form">
+                    {{ form.as_p }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Кнопка для добавления новой формы -->
+        <button type="button" id="add-form">Добавить блюдо</button>
+
+        <!-- Кнопка отправки формы -->
+        <button type="submit">Создать заказ</button>
+    </form>
+</body>
+</html>
