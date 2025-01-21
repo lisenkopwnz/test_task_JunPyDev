@@ -7,5 +7,7 @@ app_name = 'finance'
 urlpatterns = [
     path('revenue_list/', RevenueList.as_view(), name='revenue_list'),
     path('calculate_revenue/', CalculateRevenue.as_view(), name='calculate_revenue'),
-    path('close_shift/', CloseShiftView.as_view(), name='close_shift')
+    path('close_shift/', CloseShiftView.as_view(), name='close_shift'),
+
+    path('api_revenue_list/', ApiRevenueList.as_view(), name='api_revenue_list'),
 ]
