@@ -1,15 +1,18 @@
 from django.db.models import Prefetch
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.http import require_POST
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 
 from orders.forms import OrderForm, OrderDishFormSet
 from orders.models import Order, OrderDish, Dish
 
+import logging
+
+logger = logging.getLogger(__name__)  # Создаем логгер
 
 class OrderListView(ListView):
     """
@@ -116,8 +119,3 @@ class UpdateOrderStatus(View):
             order.save()
             return JsonResponse({'status': 'success', 'message': 'Статус успешно изменен.'})
         return JsonResponse({'status': 'error', 'message': 'Неверный статус.'}, status=400)
-
-
-
-
-

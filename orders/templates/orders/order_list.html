@@ -76,32 +76,32 @@
                         <td>{{ order.total_price }} руб.</td>
                         <td>{{ order.get_status_display }}</td>
                         <td>
-                            <div class="dropdown">
-                                <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton{{ order.id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Изменить статус
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ order.id }}">
-                                    {% if order.status != "pending" %}
-                                    <li>
-                                        <a class="dropdown-item change-status" href="#" data-status="pending" data-order-id="{{ order.id }}">В ожидании</a>
-                                    </li>
-                                    {% endif %}
-                                    {% if order.status != "ready" %}
-                                    <li>
-                                        <a class="dropdown-item change-status" href="#" data-status="ready" data-order-id="{{ order.id }}">Готово</a>
-                                    </li>
-                                    {% endif %}
-                                    {% if order.status != "paid" %}
-                                    <li>
-                                        <a class="dropdown-item change-status" href="#" data-status="paid" data-order-id="{{ order.id }}">Оплачено</a>
-                                    </li>
-                                    {% endif %}
-                                </ul>
-                            </div>
-                            <button class="btn btn-danger delete-btn" data-order-id="{{ order.id }}" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                                Удалить
-                            </button>
-                        </td>
+    <div class="dropdown">
+        <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton{{ order.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+            Изменить статус
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ order.id }}">
+            {% if order.status != "pending" %}
+            <li>
+                <a class="dropdown-item change-status" href="#" data-status="pending" data-order-id="{{ order.id }}">В ожидании</a>
+            </li>
+            {% endif %}
+            {% if order.status != "ready" %}
+            <li>
+                <a class="dropdown-item change-status" href="#" data-status="ready" data-order-id="{{ order.id }}">Готово</a>
+            </li>
+            {% endif %}
+            {% if order.status != "paid" %}
+            <li>
+                <a class="dropdown-item change-status" href="#" data-status="paid" data-order-id="{{ order.id }}">Оплачено</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    <button class="btn btn-danger delete-btn" data-order-id="{{ order.id }}" data-bs-toggle="modal" data-bs-target="#deleteModal">
+        Удалить
+    </button>
+</td>
                     </tr>
                     {% endfor %}
                 </tbody>
