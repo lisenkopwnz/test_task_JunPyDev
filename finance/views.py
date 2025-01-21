@@ -5,7 +5,7 @@ from django.views import View
 from django.views.generic import ListView
 
 from finance.models import Revenue
-from orders.models import Order
+from finance.services import calculate_total_revenue, close_shift_and_save_revenue
 
 
 class RevenueList(ListView):
@@ -29,12 +29,7 @@ class CalculateRevenue(View):
         today = timezone.now().date()
 
         # Рассчитываем общую выручку за оплаченные заказы за сегодня
-        total_revenue = Order.objects.filter(
-            status='paid',  # Только оплаченные заказы
-            created_at__date=today  # Заказы, созданные сегодня
-        ).aggregate(total=Sum('total_price'))['total']
-
-        total_revenue = total_revenue or 0  # Если выручки нет, устанавливаем 0
+        total_revenue = calculate_total_revenue()
 
         context = {
             'total_revenue': total_revenue,
@@ -47,21 +42,7 @@ class CloseShiftView(View):
     Представление для закрытия смены и сохранения выручки за сегодня.
     """
     def post(self, request):
-        # Получаем текущую дату
-        today = timezone.now().date()
 
-        # Рассчитываем общую выручку за оплаченные заказы за сегодня
-        total_revenue = Order.objects.filter(
-            status='paid',  # Только оплаченные заказы
-            created_at__date=today  # Заказы, созданные сегодня
-        ).aggregate(total=Sum('total_price'))['total']
-
-        total_revenue = total_revenue or 0  # Если выручки нет, устанавливаем 0
-
-        # Создаем запись о выручке за сегодня
-        Revenue.objects.create(
-            date=today,
-            total_revenue=total_revenue,
-        )
+        close_shift_and_save_revenue()
 
         return redirect('finance:revenue_list')  # Перенаправляем на страницу списка выручки
