@@ -4,11 +4,16 @@
     <meta charset="UTF-8">
     <title>Список выручки</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"> <!-- Для иконок -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-4">
         <h1>Список выручки</h1>
+
+        <!-- Кнопка "Рассчитать выручку за смену" -->
+        <a href="{% url 'finance:calculate_revenue' %}" class="btn btn-primary mb-3">
+            <i class="bi bi-calculator"></i> Рассчитать выручку за смену
+        </a>
 
         <!-- Таблица выручки -->
         {% if revenue %}
@@ -35,7 +40,7 @@
         {% endif %}
     </div>
 
-    <!-- Подключение Bootstrap JS (без jQuery) -->
+    <!-- Подключение Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
