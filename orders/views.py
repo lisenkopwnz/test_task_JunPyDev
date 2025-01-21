@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.http import require_POST
-from django.views.generic import ListView, CreateView, DeleteView
+from django.views.generic import ListView, CreateView
 
 from orders.forms import OrderForm, OrderDishFormSet
 from orders.models import Order, OrderDish, Dish
@@ -116,8 +116,6 @@ class UpdateOrderStatus(View):
             order.save()
             return JsonResponse({'status': 'success', 'message': 'Статус успешно изменен.'})
         return JsonResponse({'status': 'error', 'message': 'Неверный статус.'}, status=400)
-
-
 
 
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Dish, Order, OrderDish, Revenue
+from .models import Dish, Order, OrderDish
 
 
 class OrderDishInline(admin.TabularInline):  # или admin.StackedInline для другого вида отображения
@@ -18,9 +18,4 @@ class DishAdmin(admin.ModelAdmin):
 
 @admin.register(OrderDish)
 class OrderDishAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(Revenue)
-class RevenueAdmin(admin.ModelAdmin):
     pass
