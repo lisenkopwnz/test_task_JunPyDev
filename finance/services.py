@@ -1,7 +1,6 @@
 from finance.models import Revenue
 from order.models import Order
 
-
 from django.utils import timezone
 from django.db.models import Sum, Q
 
@@ -36,13 +35,13 @@ class RevenueService:
         today = timezone.now().date()
         total_revenue = RevenueService.calculate_total_revenue()
 
-        # Создаем запись о выручке за сегодня
+        # Создается запись о выручке за сегодня
         revenue_record, created = Revenue.objects.get_or_create(
             date=today,
             defaults={'total_revenue': total_revenue},
         )
 
-        # Если запись уже существует, обновляем её
+        # Если запись уже существует, она обновляется
         if not created:
             revenue_record.total_revenue = total_revenue
             revenue_record.save()

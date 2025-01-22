@@ -113,7 +113,7 @@ class ApiCloseShift(APIView):
 
     def post(self, request):
         try:
-            # Закрываем смену и сохраняем выручку
+            # выручка сохраняется после закрытия смены
             revenue_record = RevenueService.close_shift_and_save_revenue()
 
             return Response({

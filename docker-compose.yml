@@ -8,7 +8,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     container_name: order_system
     volumes:
-      - .:/bestcar
+      - .:/cafe_order_system
     environment:
       POSTGRES_DB: mydatabase
       POSTGRES_USER: myuser

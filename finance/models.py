@@ -1,7 +1,6 @@
 from django.db import models
 
 
-
 class Revenue(models.Model):
     """
         Модель для хранения данных о выручке за определённый день.

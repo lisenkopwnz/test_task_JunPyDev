@@ -31,7 +31,7 @@ class OrderListView(ListView):
         # Логируем некорректный номер стола, но не прерываем выполнение
         if table_number and not table_number.isdigit():
             logger.warning(f"Некорректный номер стола: {table_number}")
-            table_number = None  # Игнорируем некорректное значение
+            table_number = None
 
         return {
             'table_number': table_number,
@@ -57,7 +57,6 @@ class OrderListView(ListView):
             return orders
 
         except Exception as e:
-            # Логируем любую ошибку, но возвращаем пустой queryset
             logger.error(f"Ошибка при получении списка заказов: {e}")
             return Order.objects.none()
 
@@ -97,7 +96,6 @@ class CreateOrder(CreateView):
 
         try:
             if order_dish_formset.is_valid():
-                # Сохраняем заказ
                 self.object = form.save()
 
                 # Связываем FormSet с созданным заказом
@@ -112,12 +110,10 @@ class CreateOrder(CreateView):
                 return self.render_to_response(self.get_context_data(form=form))
 
         except ValidationError as e:
-            # Логирую ошибки валидации
             logger.error(f"Ошибка валидации при создании заказа: {e}")
             return self.render_to_response(self.get_context_data(form=form))
 
         except Exception as e:
-            # Логирую любую другую ошибку
             logger.error(f"Неожиданная ошибка при создании заказа: {e}")
             return self.render_to_response(self.get_context_data(form=form))
 
@@ -141,7 +137,6 @@ class DeleteOrder(View):
     def post(self, request: HttpRequest, *args: Any, **kwargs: Dict[str, Any]) -> HttpResponse:
         order_id = kwargs.get('pk')
         try:
-            # Получаю заказ по ID
             order = Order.objects.get(id=order_id)
             order.delete()
             logger.info(f"Заказ {order_id} успешно удалён.")

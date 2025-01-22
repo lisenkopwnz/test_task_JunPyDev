@@ -91,7 +91,7 @@ class OrderCreateUpdateSerializer(serializers.ModelSerializer):
         if 'table_number' in validated_data:
             instance.table_number = validated_data['table_number']
 
-        # Обновляю статус, если он передан
+        # Обновляем статус, если он передан
         if 'status' in validated_data:
             instance.status = validated_data['status']
 
@@ -107,7 +107,7 @@ class OrderCreateUpdateSerializer(serializers.ModelSerializer):
                     quantity=item_data['quantity'],
                     price_at_order=item_data['price_at_order']
                 )
-            # Общуая стоимость пересчитывается
+            # Общая стоимость пересчитывается
             instance.calculate_total_price()
 
         instance.save()

@@ -27,7 +27,6 @@ def test_calculate_revenue(api_client, setup_test_data):
     """
     Тестирование API для расчета выручки за сегодняшнюю смену.
     """
-    # Выполняем GET-запрос
     response = api_client.get('/finance/api_calculate_revenue/')
 
     assert response.status_code == 200

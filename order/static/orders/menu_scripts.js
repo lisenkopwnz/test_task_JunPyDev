@@ -19,7 +19,7 @@ $(document).ready(function () {
                 success: function (response) {
                     $('#deleteDishModal').modal('hide');
                     showToast('Блюдо успешно удалено!', 'success');
-                    $(`#dish-${dishIdToDelete}`).remove();  // Удаляем строку из таблицы
+                    $(`#dish-${dishIdToDelete}`).remove();  // Удаление строки из таблицы
                 },
                 error: function (xhr) {
                     $('#deleteDishModal').modal('hide');

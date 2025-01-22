@@ -12,7 +12,7 @@ from order.api.pagination import OrderPagination
 from order.api.serializers import OrderSerializer, OrderCreateUpdateSerializer, DishSerializer
 from order.models import Order, OrderDish, Dish
 
-# Настройка логгера
+
 logger = logging.getLogger(__name__)
 
 
@@ -38,6 +38,16 @@ class ApiOrderList(OrderQuerysetMixin, ListAPIView):
     """
     API для получения списка заказов.
     Поддерживает фильтрацию и пагинацию.
+
+    Пример запроса:
+    ```
+    curl -X GET http://localhost:8000/api/order_list/
+    ```
+
+    Пример запроса с фильтрацией:
+    ```
+    curl -X GET "http://localhost:8000/api/order_list/?table_number=5&status=pending"
+    ```
     """
 
     queryset = Order.objects.all()
@@ -50,6 +60,11 @@ class ApiOrderList(OrderQuerysetMixin, ListAPIView):
 class ApiOrderDetail(OrderQuerysetMixin, RetrieveAPIView):
     """
     API для получения деталей конкретного заказа.
+
+    Пример запроса:
+    ```
+    curl -X GET http://localhost:8000/api/order/1/
+    ```
     """
 
     queryset = Order.objects.all()
@@ -60,6 +75,28 @@ class ApiOrderDetail(OrderQuerysetMixin, RetrieveAPIView):
 class ApiOrderCreate(CreateAPIView):
     """
     API для создания нового заказа.
+
+    Пример запроса:
+    ```
+    curl -X POST http://localhost:8000/api/order/create/ \\
+    -H "Content-Type: application/json" \\
+    -d '{
+        "table_number": 5,
+        "status": "pending",
+        "items": [
+            {
+                "dish": 1,
+                "quantity": 2,
+                "price_at_order": 10.99
+            },
+            {
+                "dish": 2,
+                "quantity": 1,
+                "price_at_order": 5.99
+            }
+        ]
+    }'
+    ```
     """
 
     queryset = Order.objects.all()
@@ -76,6 +113,32 @@ class ApiOrderCreate(CreateAPIView):
 class ApiOrderUpdate(UpdateAPIView):
     """
     API для обновления существующего заказа.
+
+    Пример запроса (PUT):
+    ```
+    curl -X PUT http://localhost:8000/api/order/update/1/ \\
+    -H "Content-Type: application/json" \\
+    -d '{
+        "table_number": 5,
+        "status": "completed",
+        "items": [
+            {
+                "dish": 1,
+                "quantity": 3,
+                "price_at_order": 10.99
+            }
+        ]
+    }'
+    ```
+
+    Пример запроса (PATCH):
+    ```
+    curl -X PATCH http://localhost:8000/api/order/update/1/ \\
+    -H "Content-Type: application/json" \\
+    -d '{
+        "status": "completed"
+    }'
+    ```
     """
 
     queryset = Order.objects.all()
@@ -92,6 +155,11 @@ class ApiOrderUpdate(UpdateAPIView):
 class ApiOrderDelete(DestroyAPIView):
     """
     API для удаления заказа.
+
+    Пример запроса:
+    ```
+    curl -X DELETE http://localhost:8000/api/order/delete/1/
+    ```
     """
 
     queryset = Order.objects.all()
@@ -108,6 +176,11 @@ class ApiOrderDelete(DestroyAPIView):
 class ApiRemoveDishFromOrder(APIView):
     """
     API для удаления блюда из заказа.
+
+    Пример запроса:
+    ```
+    curl -X DELETE http://localhost:8000/api/order/1/remove_dish/2/
+    ```
     """
 
     def delete(self, request: Request, order_id: int, dish_id: int) -> Response:
@@ -122,7 +195,7 @@ class ApiRemoveDishFromOrder(APIView):
             if order_dish:
                 # Удаляем связь
                 order_dish.delete()
-                # Пересчитываем общую стоимость
+                # Пересчитывается общая стоимость
                 order.calculate_total_price()
                 logger.info(f"Блюдо {dish_id} удалено из заказа {order_id}.")
                 return Response({"detail": "Блюдо удалено из заказа."}, status=status.HTTP_204_NO_CONTENT)
@@ -146,6 +219,36 @@ class DishViewSet(viewsets.ModelViewSet):
     - Чтение одного объекта (GET)
     - Обновление (PUT)
     - Удаление (DELETE)
+
+    Пример запроса для создания блюда (POST):
+    ```
+    curl -X POST http://localhost:8000/api/dishes/ \\
+    -H "Content-Type: application/json" \\
+    -d '{
+        "name": "Pizza",
+        "price": 10.99
+    }'
+    ```
+
+    Пример запроса для получения списка блюд (GET):
+    ```
+    curl -X GET http://localhost:8000/api/dishes/
+    ```
+
+    Пример запроса для обновления блюда (PUT):
+    ```
+    curl -X PUT http://localhost:8000/api/dishes/1/ \\
+    -H "Content-Type: application/json" \\
+    -d '{
+        "name": "Pizza",
+        "price": 12.99
+    }'
+    ```
+
+    Пример запроса для удаления блюда (DELETE):
+    ```
+    curl -X DELETE http://localhost:8000/api/dishes/1/
+    ```
     """
 
     queryset = Dish.objects.all()

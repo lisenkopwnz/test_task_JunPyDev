@@ -103,7 +103,6 @@ def test_dish_viewset_delete(client, dish):
     assert Dish.objects.count() == 0
 
 
-# Тесты для веб-интерфейса
 @pytest.mark.django_db
 def test_order_list_view(client, order):
     """

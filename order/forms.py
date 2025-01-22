@@ -20,7 +20,7 @@ OrderDishFormSet = inlineformset_factory(
     OrderDish,  # Дочерняя модель
     fields=['dish', 'quantity', 'price_at_order'],  # Поля, которые будут отображаться в форме
     extra=1,  # Количество дополнительных пустых форм для добавления новых блюд
-    can_delete=False,  # Запрещаем удаление существующих записей через FormSet
+    can_delete=False,
 )
 
 
