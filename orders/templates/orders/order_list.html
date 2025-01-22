@@ -1,4 +1,4 @@
-{% load static %}
+{{% load static %}
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -17,6 +17,9 @@
         </a>
         <a href="{% url 'finance:revenue_list' %}" class="btn btn-success mb-3">
             <i class="bi bi-cash-stack"></i> Посмотреть выручку
+        </a>
+        <a href="{% url 'orders:menu_list' %}" class="btn btn-info mb-3">
+            <i class="bi bi-list-ul"></i> Посмотреть меню
         </a>
 
         <h1>Список заказов</h1>

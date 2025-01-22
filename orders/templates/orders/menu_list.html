@@ -1,0 +1,103 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Меню</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+<body>
+    <div class="container mt-4">
+        <!-- Кнопка возврата к списку заказов -->
+        <a href="{% url 'orders:order_list' %}" class="btn btn-secondary mb-3">
+            <i class="bi bi-arrow-left"></i> Назад к заказам
+        </a>
+
+        <!-- Кнопка создания нового блюда -->
+        <a href="{% url 'orders:create_dish' %}" class="btn btn-primary mb-3">
+            <i class="bi bi-plus-circle"></i> Создать блюдо
+        </a>
+
+        <h1>Меню</h1>
+
+        <!-- Таблица меню -->
+        {% if dishes %}
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Название</th>
+                        <th>Цена</th>
+                        <th>Описание</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dish in dishes %}
+                    <tr id="dish-{{ dish.id }}">
+                        <td>{{ dish.id }}</td>
+                        <td>{{ dish.name }}</td>
+                        <td>{{ dish.price }} руб.</td>
+                        <td>{{ dish.description|default:"-" }}</td>
+                        <td>
+                            <!-- Кнопка редактирования -->
+                            <a href="{% url 'orders:update_dish' dish.id %}" class="btn btn-warning me-2">
+                                <i class="bi bi-pencil"></i> Изменить
+                            </a>
+                            <!-- Кнопка удаления -->
+                            <button class="btn btn-danger delete-dish" data-dish-id="{{ dish.id }}">
+                                <i class="bi bi-trash"></i> Удалить
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                Блюд не найдено.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Модальное окно для подтверждения удаления -->
+    <div class="modal fade" id="deleteDishModal" tabindex="-1" aria-labelledby="deleteDishModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteDishModalLabel">Подтверждение удаления</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Вы уверены, что хотите удалить это блюдо?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteDish">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Уведомления (Toast) -->
+    <div id="toastContainer" aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+        <div id="toastTemplate" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+            <div class="toast-header">
+                <strong class="me-auto">Уведомление</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body"></div>
+        </div>
+    </div>
+
+    <!-- Подключение jQuery и Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Подключение вашего JavaScript файла -->
+    <script src="{% static 'orders/menu_scripts.js' %}"></script>
+</body>
+</html>

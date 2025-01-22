@@ -9,9 +9,9 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.http import require_POST
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DeleteView, UpdateView
 
-from orders.forms import OrderForm, OrderDishFormSet
+from orders.forms import OrderForm, OrderDishFormSet, DishForm
 from orders.models import Order, OrderDish, Dish
 
 
@@ -193,3 +193,43 @@ class UpdateOrderStatus(View):
             logger.error(f"Ошибка при обновлении статуса заказа {order_id}: {str(e)}")
 
             return JsonResponse({'status': 'error', 'message': 'Внутренняя ошибка сервера.'}, status=500)
+
+
+class MenuListView(ListView):
+    model = Dish
+    template_name = 'orders/menu_list.html'
+    context_object_name = 'dishes'
+    ordering = ['name']
+
+
+class DishDelete(DeleteView):
+    model = Dish
+    success_url = reverse_lazy('orders:menu_list')
+
+    def delete(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+            self.object.delete()
+            return JsonResponse({'status': 'success'}, status=200)
+        except Dish.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Блюдо не найдено'}, status=404)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+
+class DishCreate(CreateView):
+    """Представление для создания нового блюда."""
+
+    model = Dish
+    form_class = DishForm
+    template_name = 'orders/dish_form.html'
+    success_url = reverse_lazy('orders:menu_list')
+
+
+class DishUpdate(UpdateView):
+    """Представление для редактирования существующего блюда."""
+
+    model = Dish
+    form_class = DishForm
+    template_name = 'orders/dish_form.html'
+    success_url = reverse_lazy('orders:menu_list')

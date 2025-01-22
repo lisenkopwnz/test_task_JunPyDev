@@ -1,0 +1,95 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if form.instance.id %}Редактирование блюда{% else %}Создание нового блюда{% endif %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <!-- Заголовок -->
+        <h1 class="mb-4">
+            {% if form.instance.id %}
+                <i class="bi bi-pencil"></i> Редактирование блюда
+            {% else %}
+                <i class="bi bi-plus-circle"></i> Создание нового блюда
+            {% endif %}
+        </h1>
+
+        <!-- Форма -->
+        <form method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            <!-- Отображение ошибок формы -->
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <strong>Ошибка!</strong> Пожалуйста, исправьте следующие ошибки:
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <!-- Название блюда -->
+            <div class="mb-3">
+                <label for="id_name" class="form-label">Название</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.name.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Цена блюда -->
+            <div class="mb-3">
+                <label for="id_price" class="form-label">Цена</label>
+                {{ form.price }}
+                {% if form.price.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.price.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Описание блюда -->
+            <div class="mb-3">
+                <label for="id_description" class="form-label">Описание</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.description.errors|join:", " }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Кнопки -->
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">
+                    {% if form.instance.id %}
+                        <i class="bi bi-save"></i> Сохранить
+                    {% else %}
+                        <i class="bi bi-plus-circle"></i> Создать
+                    {% endif %}
+                </button>
+                <a href="{% url 'orders:menu_list' %}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Назад к меню
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Подключение Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <script src="{% static 'orders/form_validation.js' %}"></script>
+</body>
+</html>
