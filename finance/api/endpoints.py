@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from finance.api.pagination import RevenuePagination
 from finance.api.serializers import RevenueSerializer
 from finance.models import Revenue
-from finance.services import calculate_total_revenue, close_shift_and_save_revenue
+from finance.services import RevenueService
 
 
 class ApiRevenueList(ListAPIView):
@@ -21,7 +21,7 @@ class CalculateRevenueAPIView(APIView):
 
     def get(self, request):
         # Получаем общую выручку за сегодня
-        total_revenue = calculate_total_revenue()
+        total_revenue = RevenueService.calculate_total_revenue()
 
         # Возвращаем ответ с выручкой
         return Response({
@@ -35,7 +35,7 @@ class ApiCloseShiftView(APIView):
     """
     def post(self, request):
         # Закрываем смену и сохраняем выручку
-        revenue_record = close_shift_and_save_revenue()
+        revenue_record = RevenueService.close_shift_and_save_revenue()
 
         # Возвращаем информацию о закрытой смене
         return Response({

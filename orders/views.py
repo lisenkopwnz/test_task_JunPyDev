@@ -3,7 +3,7 @@ from typing import Dict, Union, Any
 
 from django.core.exceptions import ValidationError
 from django.db.models import Prefetch, QuerySet
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpRequest
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -138,7 +138,7 @@ class DeleteOrder(View):
             URL: `order/delete_order/<int:pk>/`
             Метод: POST
         """
-    def post(self, request, *args, **kwargs):
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Dict[str, Any]) -> HttpResponse:
         order_id = kwargs.get('pk')
         try:
             # Получаю заказ по ID
@@ -162,7 +162,7 @@ class UpdateOrderStatus(View):
     на новый, если он предоставлен, и возвращает JSON-ответ с результатом операции.
     """
 
-    def post(self, request, order_id):
+    def post(self, request: HttpRequest, order_id: int) -> JsonResponse:
         """
         Обрабатывает POST-запрос для обновления статуса заказа.
 

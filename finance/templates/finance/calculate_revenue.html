@@ -15,10 +15,19 @@
 
         <h1>Рассчитать выручку за смену</h1>
 
+        <!-- Блок для отображения ошибок -->
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                <strong>Ошибка:</strong> {{ error }}
+            </div>
+        {% endif %}
+
         <!-- Предварительный расчет выручки -->
-        <div class="alert alert-success" role="alert">
-            Общая выручка за смену: <strong>{{ total_revenue }} руб.</strong>
-        </div>
+        {% if total_revenue is not None %}
+            <div class="alert alert-success" role="alert">
+                Общая выручка за смену: <strong>{{ total_revenue }} руб.</strong>
+            </div>
+        {% endif %}
 
         <!-- Кнопка "Закрыть смену" -->
         <form method="post" action="{% url 'finance:close_shift' %}">

@@ -10,6 +10,11 @@ class Dish(models.Model):
     price = models.DecimalField(max_digits=7, decimal_places=2, validators=[ValidatePrice()])
     description = models.TextField(blank=True, null=True)
 
+    class Meta:
+        verbose_name = "Блюдо"
+        verbose_name_plural = "Блюда"
+        ordering = ['name']
+
     def __str__(self):
         """Возвращает строковое представление блюда (его название)."""
         return self.name
@@ -34,6 +39,11 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     dishes = models.ManyToManyField(Dish, through='OrderDish', related_name='orders')
 
+    class Meta:
+        verbose_name = "Заказ"
+        verbose_name_plural = "Заказы"
+        ordering = ['-created_at']
+
     def __str__(self):
         """Возвращает строковое представление заказа."""
         return f"Заказ {self.pk} - Стол {self.table_number}"
@@ -50,6 +60,11 @@ class OrderDish(models.Model):
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
     price_at_order = models.DecimalField(max_digits=10, decimal_places=2, validators=[ValidatePrice()])
+
+    class Meta:
+        verbose_name = "Блюдо в заказе"
+        verbose_name_plural = "Блюда в заказах"
+        ordering = ['order']
 
     def __str__(self):
         """Возвращает строковое представление связи заказа и блюда."""
