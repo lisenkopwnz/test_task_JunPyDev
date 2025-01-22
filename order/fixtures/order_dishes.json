@@ -1,0 +1,22 @@
+[
+    {
+        "model": "order.orderdish",
+        "pk": 1,
+        "fields": {
+            "order": 1,
+            "dish": 1,
+            "quantity": 2,
+            "price_at_order": "10.50"
+        }
+    },
+    {
+        "model": "order.orderdish",
+        "pk": 2,
+        "fields": {
+            "order": 1,
+            "dish": 2,
+            "quantity": 1,
+            "price_at_order": "12.00"
+        }
+    }
+]

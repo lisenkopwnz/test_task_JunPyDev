@@ -1,0 +1,10 @@
+[
+    {
+        "model": "finance.revenue",
+        "pk": 1,
+        "fields": {
+            "date": "2025-01-01",
+            "total_revenue": "1000.00"
+        }
+    }
+]

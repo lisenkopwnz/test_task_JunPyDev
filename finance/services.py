@@ -3,8 +3,7 @@ from order.models import Order
 
 
 from django.utils import timezone
-from django.db.models import Sum
-
+from django.db.models import Sum, Q
 
 
 class RevenueService:
@@ -21,7 +20,7 @@ class RevenueService:
         """
         today = timezone.now().date()
         total_revenue = Order.objects.filter(
-            status='paid',  # Только оплаченные заказы
+            Q(status='paid') | Q(status='ready'),  # Только оплаченные заказы
             created_at__date=today  # Заказы, созданные сегодня
         ).aggregate(total=Sum('total_price'))['total']
 
