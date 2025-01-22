@@ -1,5 +1,5 @@
 from finance.models import Revenue
-from orders.models import Order
+from order.models import Order
 
 
 from django.utils import timezone

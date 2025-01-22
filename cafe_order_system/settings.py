@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'django_extensions',
-    'orders',
+    'order',
     'finance'
 ]
 

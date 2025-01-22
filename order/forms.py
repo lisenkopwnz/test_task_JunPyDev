@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from orders.models import Order, OrderDish, Dish
+from order.models import Order, OrderDish, Dish
 
 
 class OrderForm(forms.ModelForm):

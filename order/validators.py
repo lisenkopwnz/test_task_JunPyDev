@@ -29,7 +29,7 @@ class ValidatePrice:
         :return: Кортеж с информацией для сериализации валидатора.
         """
         return (
-            "orders.validators.ValidatePrice",  # Путь к классу
+            "order.validators.ValidatePrice",  # Путь к классу
             [],  # Аргументы для __init__
             {"min_price": self.min_price},
         )

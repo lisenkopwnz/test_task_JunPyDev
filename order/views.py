@@ -11,8 +11,8 @@ from django.views import View
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView
 
-from orders.forms import OrderForm, OrderDishFormSet, DishForm
-from orders.models import Order, OrderDish, Dish
+from order.forms import OrderForm, OrderDishFormSet, DishForm
+from order.models import Order, OrderDish, Dish
 
 
 logger = logging.getLogger(__name__)

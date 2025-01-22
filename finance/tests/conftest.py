@@ -2,7 +2,7 @@ import pytest
 from django.utils import timezone
 
 from finance.models import Revenue
-from orders.models import Order
+from order.models import Order
 
 
 @pytest.fixture

@@ -7,10 +7,10 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 import logging
 
-from orders.api.filters import OrderFilter
-from orders.api.pagination import OrderPagination
-from orders.api.serializers import OrderSerializer, OrderCreateUpdateSerializer, DishSerializer
-from orders.models import Order, OrderDish, Dish
+from order.api.filters import OrderFilter
+from order.api.pagination import OrderPagination
+from order.api.serializers import OrderSerializer, OrderCreateUpdateSerializer, DishSerializer
+from order.models import Order, OrderDish, Dish
 
 # Настройка логгера
 logger = logging.getLogger(__name__)
@@ -144,7 +144,7 @@ class DishViewSet(viewsets.ModelViewSet):
     - Создание (POST)
     - Чтение списка (GET)
     - Чтение одного объекта (GET)
-    - Обновление (PUT/PATCH)
+    - Обновление (PUT)
     - Удаление (DELETE)
     """
 
