@@ -29,4 +29,4 @@ class Revenue(models.Model):
 
     def __str__(self):
         """ Возвращает строковое представление записи."""
-        return f"Выручка за {self.date}: {self.total_revenue}"
+        return f"Выручка за {self.date}: {self.total_revenue:.2f}"

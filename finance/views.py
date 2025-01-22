@@ -63,7 +63,7 @@ class CalculateRevenue(View):
             return render(request, self.template_name, {'error': 'Произошла ошибка при расчете выручки.'})
 
 
-class CloseShiftView(View):
+class CloseShift(View):
     """
     Представление для закрытия смены и сохранения выручки за сегодня.
     """
