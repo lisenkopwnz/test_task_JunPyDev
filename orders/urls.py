@@ -1,22 +1,32 @@
-from django.urls import path
-
-from .api.endpoints import ApiOrderList, ApiOrderDetail, ApiOrderCreate, OrderUpdateView, RemoveDishFromOrderView, \
-    OrderDeleteAPIView
+from django.urls import path, include
+from .api.endpoints import (
+    ApiOrderList, ApiOrderDetail, ApiOrderCreate, OrderUpdateView,
+    RemoveDishFromOrderView, OrderDeleteAPIView
+)
 from .views import OrderListView, CreateOrder, DeleteOrder, UpdateOrderStatus
 
 app_name = 'orders'
 
-urlpatterns = [
-    path('', OrderListView.as_view(), name='order_list'),
-    path('create_order/', CreateOrder.as_view(), name='create_order'),
-    path('delete_order/<int:pk>/', DeleteOrder.as_view(), name='delete_order'),  # Исправлено
-    path('update-status/<int:order_id>/', UpdateOrderStatus.as_view(), name='update_status'),
+# URL-адреса для веб-интерфейса
+web_urlpatterns = [
+    path('', OrderListView.as_view(), name='order_list'),  # Список заказов
+    path('create_order/', CreateOrder.as_view(), name='create_order'),  # Создание заказа
+    path('delete_order/<int:pk>/', DeleteOrder.as_view(), name='delete_order'),  # Удаление заказа
+    path('update-status/<int:order_id>/', UpdateOrderStatus.as_view(), name='update_status'),  # Обновление статуса заказа
+]
 
-    path('api/order_list', ApiOrderList.as_view(), name='api_order_list'),
-    path('api/order/<int:id>/', ApiOrderDetail.as_view(), name='api_order_detail'),
-    path('api/order/create/', ApiOrderCreate.as_view(), name='api_order_create'),
-    path('api/order/update/<int:pk>/', OrderUpdateView.as_view(), name='api_order_update'),
-    path('api/order/delete/<int:pk>/', OrderDeleteAPIView.as_view(), name='api_order_delete_api'),
-    path('api/order/<int:order_id>/remove_dish/<int:dish_id>/', RemoveDishFromOrderView.as_view(), name='api_remove_dish_from_order'),
+# URL-адреса для API
+api_urlpatterns = [
+    path('order_list/', ApiOrderList.as_view(), name='api_order_list'),  # Список заказов (API)
+    path('order/<int:id>/', ApiOrderDetail.as_view(), name='api_order_detail'),  # Детали заказа (API)
+    path('order/create/', ApiOrderCreate.as_view(), name='api_order_create'),  # Создание заказа (API)
+    path('order/update/<int:pk>/', OrderUpdateView.as_view(), name='api_order_update'),  # Обновление заказа (API)
+    path('order/delete/<int:pk>/', OrderDeleteAPIView.as_view(), name='api_order_delete_api'),  # Удаление заказа (API)
+    path('order/<int:order_id>/remove_dish/<int:dish_id>/', RemoveDishFromOrderView.as_view(),
+         name='api_remove_dish_from_order'),  # Удаление блюда из заказа (API)
+]
 
+# Объединение всех URL-адресов
+urlpatterns = web_urlpatterns + [
+    path('api/', include(api_urlpatterns)),  # Группировка API-адресов под префиксом /api/
 ]

@@ -1,0 +1,11 @@
+/* Дополнительные стили*/
+.dish-form {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
